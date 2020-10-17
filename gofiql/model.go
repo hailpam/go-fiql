@@ -59,7 +59,7 @@ func (n *Node) ToString() string {
 	if n.rChild != nil {
 		r = n.rChild.ToString()
 	}
-	s := fmt.Sprintf("{ %s %s %s }", l, n.expression.ToString(), r)
+	s := fmt.Sprintf("{ %s %s %s }", l, n.expression.String(), r)
 	return s
 }
 
@@ -69,10 +69,10 @@ func NewExpression() *Expression {
 	return &Expression{}
 }
 
-// ToString stringifies an expression, composing its
+// String stringifies an expression, composing its
 // operator with left and right operands using the
 // infix notation.
-func (e *Expression) ToString() string {
+func (e *Expression) String() string {
 	var l, r, o string
 	if e.lOperand != nil {
 		l = *e.lOperand

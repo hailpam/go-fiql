@@ -51,7 +51,7 @@ func tabs(depth int) string {
 // PrettyPrinting performs an AST traversal and prints out
 // the tree in a pretty hierarchical format.
 func PrettyPrinting(root *Node, depth int) {
-	fmt.Printf("%s%s\n", tabs(depth), root.expression.ToString())
+	fmt.Printf("%s%s\n", tabs(depth), root.expression.String())
 	if root.lChild != nil {
 		PrettyPrinting(root.lChild, depth+1)
 	}
