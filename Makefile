@@ -1,5 +1,5 @@
 
-all: clean build test build-examples
+all: clean build test
 
 clean:
 	rm -f examples/ast
