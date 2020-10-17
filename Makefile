@@ -1,5 +1,7 @@
 
-all: clean build test
+travis: clean build test
+
+all: clean build test build-examples
 
 clean:
 	rm -f examples/ast
@@ -16,4 +18,4 @@ build-examples:
 run-examples:
 	go run examples/ast.go
 
-.PHONY: build test all run-examples build-examples
+.PHONY: travis build test all run-examples build-examples
