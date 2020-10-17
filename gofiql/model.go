@@ -5,17 +5,41 @@ import "fmt"
 // Node defines an Abstract Syntax Tree (AST) node, in turn
 // composeed by left and right children. The information is
 // reported by the internal expression.
+//
+// The AST is organized as a composition of nodes and
+// expressions, looking like:
+//
+//    <logical_operator>
+//        <lef_expression>
+//        <logical_operator>
+//            <left_expression>
+//            <right_expression>
 type Node struct {
-	lChild     *Node
-	rChild     *Node
+	// lChild points to the left child of this node, if any.
+	lChild *Node
+	// rChild points to the right child of this node, if any.
+	rChild *Node
+	// expression points to the expression represented by this
+	// node.
 	expression *Expression
 }
 
 // Expression defines an expression in terms of left
 // and right operands along with an operator.
+//
+// The expression for the AST is organized as binary operators
+// and operands, looking like:
+//
+//    <operator>
+//        <left_operand>
+//        <right_operand>
 type Expression struct {
+	// lOperand defines the left operand for this operator.
 	lOperand *string
+	// rOperand defines the right operand of this operator.
 	rOperand *string
+	// operator defines the operator for this expression and
+	// so this node.
 	operator *string
 }
 
