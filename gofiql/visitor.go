@@ -79,5 +79,5 @@ func Traverse(root *Node, visitor Visitor) (interface{}, error) {
 		Traverse(root.rChild, visitor)
 	}
 
-	return root.Accept(&visitor)
+	return root.Accept(visitor)
 }

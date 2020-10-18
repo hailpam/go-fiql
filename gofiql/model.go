@@ -65,12 +65,12 @@ func (n *Node) String() string {
 
 // Accept takes in input a visitor and applies it according to
 // its specific nature.
-func (n *Node) Accept(visitor *Visitor) (interface{}, error) {
+func (n *Node) Accept(visitor Visitor) (interface{}, error) {
 	if n.lChild == nil && n.rChild == nil {
 		// Expression node, it's a leaf of the tree
-		return (*visitor).VisitExpression(n)
+		return (visitor).VisitExpression(n)
 	}
-	return (*visitor).VisitLogicalOperator(n)
+	return (visitor).VisitLogicalOperator(n)
 }
 
 // NewExpression creates a new expression and returns a

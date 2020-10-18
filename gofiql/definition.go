@@ -16,7 +16,7 @@ var (
 	// errMalformedOperandsStack defines a standard error to be
 	// used in case an operand stack containes any number of
 	// elements different from 2 upon a traversal.
-	errMalformedOperandsStack = fmt.Errorf("Operands stack should be sized to exactly 2 elements")
+	errMalformedOperandsStack = fmt.Errorf("Operands stack should be sized to at least 2 elements")
 	// errMalformedOperator defines a standard error to be used
 	// in case an operator is null, for some reason or other
 	// condition.
