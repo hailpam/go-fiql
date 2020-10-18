@@ -11,7 +11,7 @@ build:
 	go build ./gofiql
 
 test:
-	go test ./gofiql
+	go test ./gofiql -v
 
 build-examples:
 	go build -o examples/ast/ast examples/ast/ast.go
