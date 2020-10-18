@@ -59,3 +59,40 @@ func PrettyPrinting(root *Node, depth int) {
 		PrettyPrinting(root.rChild, depth+1)
 	}
 }
+
+// stack provides a basic implementation of the stack logic
+// based off a string slice.
+type stack struct {
+	stack []*string
+}
+
+// Push pushes an element on the stack
+func (s *stack) push(v *string) {
+	s.stack = append(s.stack, v)
+}
+
+// Top returns the topmost element without removing it from
+// the datastructure.
+func (s *stack) top() *string {
+	if len(s.stack) > 0 {
+		return s.stack[len(s.stack)-1]
+	}
+	return nil
+}
+
+// Pop returns the topmost elemet and removes it from the
+// datastructure.
+func (s *stack) pop() *string {
+	if len(s.stack) > 0 {
+		v := s.stack[len(s.stack)-1]
+		s.stack = s.stack[:len(s.stack)-1]
+		return v
+	}
+	return nil
+}
+
+// Len returns the length in terms of element of the backing
+// datastructure.
+func (s *stack) len() int {
+	return len(s.stack)
+}

@@ -2,6 +2,14 @@ package gofiql
 
 import "fmt"
 
+// Visitable defines an interface for visitable objects. An
+// implementation might be the AST node, or any specific
+// instance of it.
+type Visitable interface {
+	Accept(visitor *Visitor) (interface{}, error)
+	String() string
+}
+
 // Node defines an Abstract Syntax Tree (AST) node, in turn
 // composeed by left and right children. The information is
 // reported by the internal expression.
@@ -48,19 +56,25 @@ func NewNode() *Node {
 	return &Node{}
 }
 
-// ToString stringified a node, composing its left
+// String stringified a node, composing its left
 // and right children with an expression using the
 // infix notation.
-func (n *Node) ToString() string {
+func (n *Node) String() string {
 	var l, r string
 	if n.lChild != nil {
-		l = n.lChild.ToString()
+		l = n.lChild.String()
 	}
 	if n.rChild != nil {
-		r = n.rChild.ToString()
+		r = n.rChild.String()
 	}
 	s := fmt.Sprintf("{ %s %s %s }", l, n.expression.String(), r)
 	return s
+}
+
+// Accept takes in input a visitor and applies it according to
+// its specific nature.
+func (n *Node) Accept(visitor *Visitor) (interface{}, error) {
+	return nil, errNotImplemented
 }
 
 // NewExpression creates a new expression and returns a
@@ -85,4 +99,41 @@ func (e *Expression) String() string {
 	}
 	s := fmt.Sprintf("[ %s %s %s ]", l, o, r)
 	return s
+}
+
+// ExpressionNode defines a specialized note type
+// that can be used at parsing time to build a
+// leaf of the AST.
+type ExpressionNode struct {
+	Node
+}
+
+// Accept uses the input visitor to generate actions for
+// the visit according to the specific instance of Visitor.
+func (e *ExpressionNode) Accept(visitor *Visitor) (interface{}, error) {
+	return (*visitor).VisitExpression(e)
+}
+
+// String delegates to the superclass.
+func (e *ExpressionNode) String() string {
+	return e.Node.String()
+}
+
+// LogicalOperatorNode defines a specialized note type
+// that can be used at parsing time to build an
+// intermediary node of the AST containing a logical
+// operator and children (left and right nodes).
+type LogicalOperatorNode struct {
+	Node
+}
+
+// Accept uses the input visitor to generate actions for
+// the visit according to the specific instance of Visitor.
+func (l *LogicalOperatorNode) Accept(visitor *Visitor) (interface{}, error) {
+	return (*visitor).VisitLogicalOperator(l)
+}
+
+// String delegates to the superclass.
+func (l *LogicalOperatorNode) String() string {
+	return l.Node.String()
 }
