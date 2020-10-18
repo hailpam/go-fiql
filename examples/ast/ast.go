@@ -11,7 +11,8 @@ func main() {
 	root, err := fiql.Parse(f)
 	if err != nil {
 		fmt.Println(err)
-	} else {
-		fiql.PrettyPrinting(root, 0)
+		return
 	}
+
+	fiql.PrettyPrinting(root, 0)
 }

@@ -66,6 +66,13 @@ type stack struct {
 	stack []*string
 }
 
+// newStack creates a new slice backing the stack.
+func newStack() *stack {
+	return &stack{
+		stack: make([]*string, 0),
+	}
+}
+
 // Push pushes an element on the stack
 func (s *stack) push(v *string) {
 	s.stack = append(s.stack, v)

@@ -18,6 +18,7 @@ build-examples:
 	go build -o examples/visit/visit examples/visit/visit.go
 
 run-examples:
-	go run examples/ast.go
+	go run examples/ast/ast.go
+	go run examples/visit/visit.go
 
 .PHONY: travis build test all run-examples build-examples

@@ -11,8 +11,8 @@ import "fmt"
 // interpretation or specific serialization upon the traversal
 // of the AST.
 type Visitor interface {
-	VisitLogicalOperator(node *LogicalOperatorNode) (interface{}, error)
-	VisitExpression(n *ExpressionNode) (interface{}, error)
+	VisitLogicalOperator(node *Node) (interface{}, error)
+	VisitExpression(n *Node) (interface{}, error)
 }
 
 // SQLVisitor provides serialization services for SQL backends.
@@ -24,24 +24,26 @@ type SQLVisitor struct {
 
 // NewSQLVisitor creates a new instance of SQL visitor.
 func NewSQLVisitor() *SQLVisitor {
-	return &SQLVisitor{}
+	return &SQLVisitor{
+		stack: newStack(),
+	}
 }
 
 // VisitLogicalOperator is a specific implementation of the visit
 // method to generate SQL for logical operator nodes.
-func (s *SQLVisitor) VisitLogicalOperator(v *LogicalOperatorNode) (interface{}, error) {
-	if s.stack.len() != 2 {
+func (s *SQLVisitor) VisitLogicalOperator(v *Node) (interface{}, error) {
+	if s.stack.len() < 2 {
 		return nil, errMalformedOperandsStack
 	}
 	r := s.stack.pop()
 	l := s.stack.pop()
 
-	o := v.Node.expression.operator
-	if o == nil {
+	if v.expression.operator == nil {
 		return nil, errMalformedOperator
 	}
+	o := sqlLogicalOperators[*v.expression.operator]
 
-	f := fmt.Sprintf("(%s %s %s)", *l, *o, *r)
+	f := fmt.Sprintf("(%s %s %s)", *l, o, *r)
 	s.stack.push(&f)
 
 	return f, nil
@@ -49,18 +51,19 @@ func (s *SQLVisitor) VisitLogicalOperator(v *LogicalOperatorNode) (interface{}, 
 
 // VisitExpression is a specific implementation of the visit method
 // to generate SQL for expression  nodes.
-func (s *SQLVisitor) VisitExpression(v *ExpressionNode) (interface{}, error) {
-	l := v.Node.expression.lOperand
-	r := v.Node.expression.rOperand
+func (s *SQLVisitor) VisitExpression(v *Node) (interface{}, error) {
+	l := v.expression.lOperand
+	r := v.expression.rOperand
 	if l == nil || r == nil {
 		return nil, errMalformedOperand
 	}
-	o := v.Node.expression.operator // TBD - to lookup operator
-	if o == nil {
+
+	if v.expression.operator == nil {
 		return nil, errMalformedOperator
 	}
+	o := sqlOperators[*v.expression.operator]
 
-	f := fmt.Sprintf("%s %s %s", *l, *o, *r)
+	f := fmt.Sprintf("%s %s %s", *l, o, *r)
 	s.stack.push(&f)
 
 	return f, nil
@@ -68,7 +71,7 @@ func (s *SQLVisitor) VisitExpression(v *ExpressionNode) (interface{}, error) {
 
 // Traverse implements a generic traversal which is going to be
 // implemented according to the specific instance of Visitor.
-func Traverse(root *Node, visitor *Visitor) (interface{}, error) {
+func Traverse(root *Node, visitor Visitor) (interface{}, error) {
 	if root.lChild != nil {
 		Traverse(root.lChild, visitor)
 	}
@@ -76,5 +79,5 @@ func Traverse(root *Node, visitor *Visitor) (interface{}, error) {
 		Traverse(root.rChild, visitor)
 	}
 
-	return root.Accept(visitor)
+	return root.Accept(&visitor)
 }
