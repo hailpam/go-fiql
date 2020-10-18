@@ -8,13 +8,7 @@ import (
 // it returns the first index; otherwise, it returns a -1 which is
 // the typical indicator of unsuccessful search.
 func findToken(expression *string) (int, []byte) {
-	tokens := []byte(",;()")
-	comma := tokens[0]
-	semicolon := tokens[1]
-	lParenthesis := tokens[2]
-	rParenthesis := tokens[3]
 	chars := []byte(*expression)
-
 	var cntr uint8
 	for {
 		if !bytes.ContainsAny(chars, ",;") {
@@ -22,17 +16,17 @@ func findToken(expression *string) (int, []byte) {
 		}
 		cntr = 0
 		for i := 0; i < len(chars); i++ {
-			if chars[i] == lParenthesis {
+			if chars[i] == lParenthesisByte {
 				cntr++
 			}
-			if chars[i] == rParenthesis {
+			if chars[i] == rParenthesisByte {
 				cntr--
 			}
-			if cntr == 0 && (chars[i] == comma || chars[i] == semicolon) {
+			if cntr == 0 && (chars[i] == fiqlOrByte || chars[i] == fiqlAndByte) {
 				return i, chars
 			}
 		}
-		if chars[0] == lParenthesis && chars[len(chars)-1] == rParenthesis {
+		if chars[0] == lParenthesisByte && chars[len(chars)-1] == rParenthesisByte {
 			chars = chars[1 : len(chars)-1]
 		}
 	}
@@ -44,6 +38,9 @@ func findToken(expression *string) (int, []byte) {
 // The so built AST can be then traversed for interpretation or
 // re-serialization purposes.
 func Parse(expression string) (*Node, error) {
+	if !checkParenthesis(&expression) {
+		return nil, errMalformedParenthesis
+	}
 	idx, chars := findToken(&expression)
 	expression = string(chars)
 	node := NewNode()

@@ -73,3 +73,35 @@ func TestTabs(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestCheckParenthesis(t *testing.T) {
+	p := "()()()"
+	if !checkParenthesis(&p) {
+		t.Logf("Expected %s to be a correct combination", p)
+		t.Fail()
+	}
+
+	pp := "((()))"
+	if !checkParenthesis(&pp) {
+		t.Logf("Expected %s to be a correct combination", pp)
+		t.Fail()
+	}
+
+	ppp := "((()))()()()()()"
+	if !checkParenthesis(&ppp) {
+		t.Logf("Expected %s to be a correct combination", ppp)
+		t.Fail()
+	}
+
+	pppp := ")()(()"
+	if checkParenthesis(&pppp) {
+		t.Logf("Expected %s to be an incorrect combination", pppp)
+		t.Fail()
+	}
+
+	ppppp := "(((((product==\"Apple\",product==\"Google\");(name==\"Joe\",name==\"Alan\")));label=!~=\"text\";(qty=gte=1,qty=lte=10)))"
+	if !checkParenthesis(&ppppp) {
+		t.Logf("Expected %s to be an incorrect combination", ppppp)
+		t.Fail()
+	}
+}

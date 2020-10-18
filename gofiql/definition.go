@@ -9,6 +9,28 @@ const (
 )
 
 var (
+	// fiqlOr defines the OR operator of the FIQL language.
+	fiqlOr = ","
+	// fiqlAnd defines the AND operator of the FIQL language.
+	fiqlAnd = ";"
+	// fiqlOrByte defines the OR operator of the FIQL language and its
+	// representative byte.
+	fiqlOrByte = []byte(",")[0]
+	// fiqlAndByte defines the ANd operator of the FIQL language and its
+	// representative byte.
+	fiqlAndByte = []byte(";")[0]
+	// lParenthesis defines the left parenthesis expected in logical
+	// compoound statements.
+	lParenthesis = "("
+	// rParenthesis defines the left parenthesis expected in logical
+	// compoound statements.
+	rParenthesis = ")"
+	// lParenthesisByte defines the left parenthesis expected in logical
+	// compoound statements and its representative byte.
+	lParenthesisByte = []byte("(")[0]
+	// rParenthesisByte defines the left parenthesis expected in logical
+	// compoound statements and its representative byte.
+	rParenthesisByte = []byte(")")[0]
 	// errNotImplemented defines a standard error to be used for
 	// functions which require and implementation and that are only
 	// a placeholder from the interface.
@@ -25,6 +47,10 @@ var (
 	// in case an operand is null, for some reason or other
 	// condition.
 	errMalformedOperand = fmt.Errorf("Operand cannot be null")
+	// errMalformedParenthesis defines a standard error to be
+	// used in case of unbalancede parenthesis which make the
+	// overall statement lofically meaningless.
+	errMalformedParenthesis = fmt.Errorf("Parenthesis cannot be matched, they seems unbalanced")
 )
 
 var (

@@ -48,6 +48,30 @@ func tabs(depth int) string {
 	return buffer.String()
 }
 
+// checkParenthesis checks the parenthesis of an expression.
+// It returns 'false' in case of malformed parenthesis combination,
+// 'true' elsewhere.
+func checkParenthesis(expression *string) bool {
+	chars := []byte(*expression)
+	stack := newStack()
+	cntr := 0
+	for _, char := range chars {
+		if char == lParenthesisByte {
+			cntr++
+			stack.push(&lParenthesis)
+		}
+		if char == rParenthesisByte {
+			cntr--
+			stack.pop()
+		}
+	}
+	if cntr == 0 && stack.len() == 0 {
+		return true
+	}
+
+	return false
+}
+
 // PrettyPrinting performs an AST traversal and prints out
 // the tree in a pretty hierarchical format.
 func PrettyPrinting(root *Node, depth int) {
